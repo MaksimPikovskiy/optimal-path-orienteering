@@ -34,7 +34,7 @@ public class aStarSearch {
         generatedNodes.add(start);
 
         Node goal = null;
-        while(generatedNodes != null) {
+        while(!generatedNodes.isEmpty()) {
             Node curr = generatedNodes.remove();
 
         }
