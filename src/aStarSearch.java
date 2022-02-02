@@ -47,7 +47,7 @@ public class aStarSearch {
         return solution;
     }
 
-    private double costFunction(Point point1, Point point2) {
+    private double calculateDistance(Point point1, Point point2) {
 
         double deltaX = LONGITUDE * (point1.x - point2.y);
         double distX = Math.pow(Math.abs(deltaX), 2);
@@ -61,6 +61,12 @@ public class aStarSearch {
 
         double dist = Math.sqrt(distX + distY + distZ);
 
+        return dist;
+    }
+
+    private double costFunction(Point point1, Point point2) {
+        double dist = calculateDistance(point1, point2);
+
         double TerrainMod1 = getTerrainModifier(point1);
         double TerrainMod2 = getTerrainModifier(point2);
 
@@ -68,7 +74,7 @@ public class aStarSearch {
     }
 
     private double heuristicFunction(Point point1, Point point2) {
-        double dist = costFunction(point1, point2);
+        double dist = calculateDistance(point1, point2);
 
         double bestTerrainMod = 0;
         for (Terrain terrain : terrains)
