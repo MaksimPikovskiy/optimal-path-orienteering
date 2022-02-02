@@ -61,24 +61,21 @@ public class aStarSearch {
 
         double dist = Math.sqrt(distX + distY + distZ);
 
-        return dist;
-    }
-
-    private double heuristicFunction(double dist) {
-
-        double bestTerrainMod = 0;
-        for(int i = 0; i < terrains.size(); i++)
-            if(bestTerrainMod < terrains.get(i).modifier)
-                bestTerrainMod = terrains.get(i).modifier;
-
-        return dist / bestTerrainMod;
-    }
-
-    private double gFunction(double dist, Point point1, Point point2) {
         double TerrainMod1 = getTerrainModifier(point1);
         double TerrainMod2 = getTerrainModifier(point2);
 
         return TerrainMod1 * (dist / 2) + TerrainMod2 * (dist / 2);
+    }
+
+    private double heuristicFunction(Point point1, Point point2) {
+        double dist = costFunction(point1, point2);
+
+        double bestTerrainMod = 0;
+        for (Terrain terrain : terrains)
+            if (bestTerrainMod < terrain.modifier)
+                bestTerrainMod = terrain.modifier;
+
+        return dist / bestTerrainMod;
     }
 
     private double getTerrainModifier(Point point) {
