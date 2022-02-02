@@ -23,16 +23,16 @@ public class lab1 {
 
         List<Terrain> terrains = new LinkedList<>();
 
-        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 1));
-        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 1));
-        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 1));
-        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 1));
-        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 1));
-        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, 1));
-        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, 1));
+        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 0.8));
+        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 0.4));
+        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 0.75));
+        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 0.65));
+        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 0.5));
+        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, 0.2));
+        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, 0.1));
         terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 1));
-        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 1));
-        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, 1));
+        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 0.9));
+        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, 0.00001));
 
 
 
@@ -83,12 +83,13 @@ public class lab1 {
 
         List<Node> solutionPath = new ArrayList<>();
 
-        for(int i = 0; i < pointsArray.length - 1; i++) {
-            solutionPath.addAll(aStarSearch(terrainMap, terrains, elevationArray,
-                    pointsArray[i], pointsArray[i + 1]));
+        for(int i = 0; i < destinations.size() - 1; i++) {
+            aStarSearch search = new aStarSearch(terrainMap, terrains, elevationArray,
+                    destinations.get(i), destinations.get(i + 1));
+            solutionPath.addAll(search.findPath());
         }
 
-        for(Point a: destinations)
+        for(Node a: solutionPath)
             System.out.println(a);
 
 

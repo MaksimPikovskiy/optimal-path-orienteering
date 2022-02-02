@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Node {
+public class Node implements Comparable<Node> {
 
     Point location;
     double g;
@@ -16,6 +16,16 @@ public class Node {
         parentNode = parent;
     }
 
+    public int compareTo(Node that) {
+        if(this.f < that.f) return -1;
+        else if(this.f > that.f) return 1;
+        else {
+            if(this.h < that.h) return -1;
+            else if(this.h > that.h) return 1;
+            else return 0;
+        }
+    }
+
     public boolean equals(Object that) {
         if(this == that) return true;
         if(that == null) return false;
@@ -23,6 +33,10 @@ public class Node {
         Node thatNode = (Node) that;
         return (this.parentNode == thatNode.parentNode) &&
                 (this.location == thatNode.location);
+    }
+
+    public String toString() {
+        return "Node at (" + location.getX() + ", " + location.getY() + ")";
     }
 
 
