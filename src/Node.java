@@ -19,11 +19,7 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node that) {
         if(this.fScore < that.fScore) return -1;
         else if(this.fScore > that.fScore) return 1;
-        else {
-            if(this.hScore < that.hScore) return -1;
-            else if(this.hScore > that.hScore) return 1;
-            else return 0;
-        }
+        else return 0;
     }
 
     public String toString() {
