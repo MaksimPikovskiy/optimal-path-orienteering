@@ -176,6 +176,6 @@ public class aStarSearch {
             if(Arrays.equals(terr.color, valuesRGB))
                 return terr.modifier;
 
-        return -10;
+        return -1;
     }
 }

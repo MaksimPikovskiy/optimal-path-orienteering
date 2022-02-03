@@ -28,16 +28,16 @@ public class lab1 {
 
         List<Terrain> terrains = new LinkedList<>();
 
-        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 8));
-        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 6));
-        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 8));
-        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 7));
-        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 6));
-        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, -5));
-        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, -5));
-        terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 10));
-        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 9));
-        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, -100));
+        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 1));
+        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 0.45));
+        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 0.8));
+        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 0.7));
+        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 0.6));
+        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, -1));
+        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, -1));
+        terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 1));
+        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 0.9));
+        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, -1));
 
 
         if(args.length != 4) {
