@@ -27,7 +27,7 @@ public class Node implements Comparable<Node> {
     }
 
     public String toString() {
-        return "Node at (" + location.getX() + ", " + location.getY() + ")";
+        return "Node at (" + location.getX() + ", " + location.getY() + ") with fScore = " + fScore;
     }
 
 

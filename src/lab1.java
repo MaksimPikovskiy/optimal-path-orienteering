@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class lab1 {
 
@@ -23,21 +24,20 @@ public class lab1 {
     }
 
     public static void main(String[] args) {
+        long startTime = System.nanoTime();
 
         List<Terrain> terrains = new LinkedList<>();
 
-        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 0.8));
-        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 0.4));
-        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 0.75));
-        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 0.65));
-        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 0.5));
-        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, 0.2));
-        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, 0.1));
-        terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 1));
-        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 0.9));
-        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, 0.00001));
-
-
+        terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 8));
+        terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 6));
+        terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 8));
+        terrains.add(new Terrain("Slow run forest", new int[]{2, 208, 60}, 7));
+        terrains.add(new Terrain("Walk forest", new int[]{2, 136, 40}, 6));
+        terrains.add(new Terrain("Impassible vegetation", new int[]{5, 73, 24}, -5));
+        terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, -5));
+        terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 10));
+        terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 9));
+        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, -100));
 
 
         if(args.length != 4) {
@@ -61,10 +61,14 @@ public class lab1 {
         }
 
         assert allElevations != null;
+        //String[] tempElevationArray = allElevations.substring(3, allElevations.length()).split("\\s+");
         String[] tempElevationArray = allElevations.split("\\s+");
 
-        for(int i = 0; i < tempElevationArray.length; i++)
-            tempElevationArray[i] = tempElevationArray[i].substring(0, tempElevationArray[i].length() - 5);
+        for(int i = 0; i < tempElevationArray.length; i++) {
+            if(tempElevationArray[i].length() > 0) {
+                tempElevationArray[i] = tempElevationArray[i].substring(0, tempElevationArray[i].length() - 5);
+            }
+        }
 
         double[] tempElevationArray2 = Arrays.stream(tempElevationArray).mapToDouble(Double::parseDouble).toArray();
 
@@ -95,18 +99,19 @@ public class lab1 {
         double sum = 0;
         for(int i = 0; i < solutionPath.size() - 1; i++) {
             Point point1 = solutionPath.get(i).location;
-            Point point2 = solutionPath.get(i).location;
+            Point point2 = solutionPath.get(i + 1).location;
 
-            if(point1.x == point2.x) sum += aStarSearch.LONGITUDE;
-            else if(point1.y == point2.y) sum += aStarSearch.LATITUDE;
+            if(point1.y == point2.y) sum += aStarSearch.LONGITUDE;
+            else if(point1.x == point2.x) sum += aStarSearch.LATITUDE;
         }
 
         String distText = "Total Distance: " + sum + " m";
 
         System.out.println(distText);
 
-        for(Node node: solutionPath)
+        for(Node node: solutionPath) {
             terrainMap.setRGB(node.location.x, node.location.y, new Color(255, 0, 0, 255).getRGB());
+        }
 
         File totalDistanceFile = new File(outputPath + "totalDistance.txt");
         File terrainWithPathFile = new File(args[3]);
@@ -120,5 +125,8 @@ public class lab1 {
             System.err.println(e);
         }
 
+        long endTime   = System.nanoTime();
+        long totalTime = TimeUnit.NANOSECONDS.toSeconds(endTime - startTime);
+        System.out.println("Time Taken: " + totalTime + " seconds");
     }
 }

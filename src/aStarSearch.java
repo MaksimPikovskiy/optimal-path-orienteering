@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -51,7 +52,8 @@ public class aStarSearch {
                     break;
                 }
 
-                tempNodes.add(temp);
+                if(!(temp.gScore < 0))
+                    tempNodes.add(temp);
             }
             if(curr.location.y >= SOUTH_LIMIT) {
                 nextPoint = new Point(curr.location.x, curr.location.y - 1);
@@ -62,7 +64,8 @@ public class aStarSearch {
                     break;
                 }
 
-                tempNodes.add(temp);
+                if(!(temp.gScore < 0))
+                    tempNodes.add(temp);
             }
             if(curr.location.x <= EAST_LIMIT) {
                 nextPoint = new Point(curr.location.x + 1, curr.location.y);
@@ -73,7 +76,8 @@ public class aStarSearch {
                     break;
                 }
 
-                tempNodes.add(temp);
+                if(!(temp.gScore < 0))
+                    tempNodes.add(temp);
             }
             if(curr.location.x >= WEST_LIMIT) {
                 nextPoint = new Point(curr.location.x - 1, curr.location.y);
@@ -84,22 +88,25 @@ public class aStarSearch {
                     break;
                 }
 
-                tempNodes.add(temp);
+                if(!(temp.gScore < 0))
+                    tempNodes.add(temp);
             }
 
             for(Node temp : tempNodes) {
                 boolean flagAdd = true;
-                for(Node sNode : searchedNodes) {
-                    if(temp.location.equals(sNode.location) && temp.fScore > sNode.fScore) {
-                        flagAdd = false;
-                        break;
-                    }
-                }
-                if(flagAdd) {
-                    for (Node gNode : generatedNodes) {
-                        if (temp.location.equals(gNode.location) && temp.fScore > gNode.fScore) {
+                if(!searchedNodes.isEmpty() && !generatedNodes.isEmpty()) {
+                    for (Node sNode : searchedNodes) {
+                        if (temp.location.equals(sNode.location) && temp.fScore > sNode.fScore) {
                             flagAdd = false;
                             break;
+                        }
+                    }
+                    if (flagAdd) {
+                        for (Node gNode : generatedNodes) {
+                            if (temp.location.equals(gNode.location) && temp.fScore > gNode.fScore) {
+                                flagAdd = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -121,7 +128,7 @@ public class aStarSearch {
 
     public double calculateDistance(Point point1, Point point2) {
 
-        double deltaX = LONGITUDE * (point1.x - point2.y);
+        double deltaX = LONGITUDE * (point1.x - point2.x);
         double distX = Math.pow(Math.abs(deltaX), 2);
 
         double deltaY = LATITUDE * (point1.y - point2.y);
@@ -140,7 +147,7 @@ public class aStarSearch {
         double TerrainMod1 = getTerrainModifier(point1);
         double TerrainMod2 = getTerrainModifier(point2);
 
-        return TerrainMod1 * (dist / 2) + TerrainMod2 * (dist / 2);
+        return  TerrainMod1 * (dist / 2) + TerrainMod2 * (dist / 2);
     }
 
     private double heuristicFunction(Point point1, Point point2) {
@@ -151,7 +158,7 @@ public class aStarSearch {
             if (bestTerrainMod < terrain.modifier)
                 bestTerrainMod = terrain.modifier;
 
-        return dist / bestTerrainMod;
+        return dist * bestTerrainMod;
     }
 
     private Node getNewNode(Node curr, Point nextPoint) {
@@ -162,13 +169,13 @@ public class aStarSearch {
     }
 
     private double getTerrainModifier(Point point) {
-        int color = terrainMap.getRGB(point.x, point.y);
-        int[] valuesRGB = new int[]{((color & 0xff0000) >> 16), (color & 0xff00) >> 8, color & 0xff};
+        Color color = new Color(terrainMap.getRGB(point.x, point.y));
+        int[] valuesRGB = new int[]{color.getRed(), color.getGreen(), color.getBlue()};
 
         for(Terrain terr : terrains)
-            if(terr.color == valuesRGB)
+            if(Arrays.equals(terr.color, valuesRGB))
                 return terr.modifier;
 
-        return 0.000000001;
+        return -10;
     }
 }
