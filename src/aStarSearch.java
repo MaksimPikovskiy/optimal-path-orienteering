@@ -34,7 +34,7 @@ public class aStarSearch {
         PriorityQueue<Node> generatedNodes = new PriorityQueue<>();
         List<Node> searchedNodes = new ArrayList<>();
 
-        Node start = new Node(startPoint, 0, 0, null);
+        Node start = new Node(startPoint, 0, heuristicFunction(startPoint, goalPoint), null);
         generatedNodes.add(start);
 
         Point nextPoint;
