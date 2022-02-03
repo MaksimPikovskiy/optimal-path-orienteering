@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class lab1 {
+
+    private static final String outputPath = "output/";
 
     public static void usage() {
         System.err.println("Program should accept 4 arguments, " +
@@ -89,9 +92,33 @@ public class lab1 {
             solutionPath.addAll(search.findPath());
         }
 
-        for(Node a: solutionPath)
-            System.out.println(a);
+        double sum = 0;
+        for(int i = 0; i < solutionPath.size() - 1; i++) {
+            Point point1 = solutionPath.get(i).location;
+            Point point2 = solutionPath.get(i).location;
 
+            if(point1.x == point2.x) sum += aStarSearch.LONGITUDE;
+            else if(point1.y == point2.y) sum += aStarSearch.LATITUDE;
+        }
+
+        String distText = "Total Distance: " + sum + " m";
+
+        System.out.println(distText);
+
+        for(Node node: solutionPath)
+            terrainMap.setRGB(node.location.x, node.location.y, new Color(255, 0, 0, 255).getRGB());
+
+        File totalDistanceFile = new File(outputPath + "totalDistance.txt");
+        File terrainWithPathFile = new File(args[3]);
+        try {
+            ImageIO.write(terrainMap, "PNG", terrainWithPathFile);
+
+            FileWriter fileWriter = new FileWriter(totalDistanceFile, false);
+            fileWriter.write(distText);
+            fileWriter.close();
+        } catch(IOException e) {
+            System.err.println(e);
+        }
 
     }
 }

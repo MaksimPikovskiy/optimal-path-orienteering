@@ -12,8 +12,13 @@ public class aStarSearch {
     private final Point startPoint;
     private final Point goalPoint;
 
-    private static final double LONGITUDE = 10.29;
-    private static final double LATITUDE = 7.55;
+    public static final double LONGITUDE = 10.29;
+    public static final double LATITUDE = 7.55;
+
+    private static final int NORTH_LIMIT = 498;
+    private static final int SOUTH_LIMIT = 1;
+    private static final int EAST_LIMIT = 393;
+    private static final int WEST_LIMIT = 1;
 
     public aStarSearch(BufferedImage terrainMap, List<Terrain> terrains, double[][] elevationArray,
                        Point startPoint, Point goalPoint) {
@@ -25,29 +30,96 @@ public class aStarSearch {
     }
 
     public ArrayList<Node> findPath() {
-        double test = elevationArray[1][1];
-
         PriorityQueue<Node> generatedNodes = new PriorityQueue<>();
         List<Node> searchedNodes = new ArrayList<>();
 
         Node start = new Node(startPoint, 0, 0, null);
         generatedNodes.add(start);
 
+        Point nextPoint;
         Node goal = null;
         while(!generatedNodes.isEmpty()) {
+            List<Node> tempNodes = new ArrayList<>();
             Node curr = generatedNodes.remove();
 
+            if(curr.location.y <= NORTH_LIMIT) {
+                nextPoint = new Point(curr.location.x, curr.location.y + 1);
+                Node temp = getNewNode(curr, nextPoint);
+
+                if(temp.location.equals(goalPoint)) {
+                    goal = temp;
+                    break;
+                }
+
+                tempNodes.add(temp);
+            }
+            if(curr.location.y >= SOUTH_LIMIT) {
+                nextPoint = new Point(curr.location.x, curr.location.y - 1);
+                Node temp = getNewNode(curr, nextPoint);
+
+                if(temp.location.equals(goalPoint)) {
+                    goal = temp;
+                    break;
+                }
+
+                tempNodes.add(temp);
+            }
+            if(curr.location.x <= EAST_LIMIT) {
+                nextPoint = new Point(curr.location.x + 1, curr.location.y);
+                Node temp = getNewNode(curr, nextPoint);
+
+                if(temp.location.equals(goalPoint)) {
+                    goal = temp;
+                    break;
+                }
+
+                tempNodes.add(temp);
+            }
+            if(curr.location.x >= WEST_LIMIT) {
+                nextPoint = new Point(curr.location.x - 1, curr.location.y);
+                Node temp = getNewNode(curr, nextPoint);
+
+                if(temp.location.equals(goalPoint)) {
+                    goal = temp;
+                    break;
+                }
+
+                tempNodes.add(temp);
+            }
+
+            for(Node temp : tempNodes) {
+                boolean flagAdd = true;
+                for(Node sNode : searchedNodes) {
+                    if(temp.location.equals(sNode.location) && temp.fScore > sNode.fScore) {
+                        flagAdd = false;
+                        break;
+                    }
+                }
+                if(flagAdd) {
+                    for (Node gNode : generatedNodes) {
+                        if (temp.location.equals(gNode.location) && temp.fScore > gNode.fScore) {
+                            flagAdd = false;
+                            break;
+                        }
+                    }
+                }
+
+                if(flagAdd)
+                    generatedNodes.add(temp);
+            }
+
+            searchedNodes.add(curr);
         }
 
         ArrayList<Node> solution = new ArrayList<>();
         while(goal != null) {
-            solution.add(goal);
+            solution.add(0, goal);
             goal = goal.parentNode;
         }
         return solution;
     }
 
-    private double calculateDistance(Point point1, Point point2) {
+    public double calculateDistance(Point point1, Point point2) {
 
         double deltaX = LONGITUDE * (point1.x - point2.y);
         double distX = Math.pow(Math.abs(deltaX), 2);
@@ -59,9 +131,7 @@ public class aStarSearch {
                 - elevationArray[point2.x][point2.y];
         double distZ = Math.pow(Math.abs(deltaZ), 2);
 
-        double dist = Math.sqrt(distX + distY + distZ);
-
-        return dist;
+        return Math.sqrt(distX + distY + distZ);
     }
 
     private double costFunction(Point point1, Point point2) {
@@ -82,6 +152,13 @@ public class aStarSearch {
                 bestTerrainMod = terrain.modifier;
 
         return dist / bestTerrainMod;
+    }
+
+    private Node getNewNode(Node curr, Point nextPoint) {
+        double gScoreTemp = costFunction(curr.location, nextPoint);
+        double hScoreTemp = heuristicFunction(nextPoint, goalPoint);
+
+        return new Node(nextPoint, curr.gScore + gScoreTemp, hScoreTemp, curr);
     }
 
     private double getTerrainModifier(Point point) {
