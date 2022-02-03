@@ -26,7 +26,7 @@ public class lab1 {
     public static void main(String[] args) {
         long startTime = System.nanoTime();
 
-        List<Terrain> terrains = new LinkedList<>();
+        List<Terrain> terrains = new ArrayList<>();
 
         terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 1));
         terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 0.45));
