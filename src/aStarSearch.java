@@ -40,8 +40,8 @@ public class aStarSearch {
         Point nextPoint;
         Node goal = null;
         while(!generatedNodes.isEmpty()) {
-            List<Node> tempNodes = new ArrayList<>();
             Node curr = generatedNodes.remove();
+            searchedNodes.add(curr);
 
             if(curr.location.y <= NORTH_LIMIT) {
                 nextPoint = new Point(curr.location.x, curr.location.y + 1);
@@ -52,8 +52,18 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.gScore < 0))
-                    tempNodes.add(temp);
+                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
+                    if (!generatedNodes.contains(temp)) {
+                        generatedNodes.add(temp);
+                    } else {
+                        for(Node node : generatedNodes) {
+                            if(node.fScore > temp.fScore) {
+                                generatedNodes.add(temp);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             if(curr.location.y >= SOUTH_LIMIT) {
                 nextPoint = new Point(curr.location.x, curr.location.y - 1);
@@ -64,8 +74,18 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.gScore < 0))
-                    tempNodes.add(temp);
+                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
+                    if (!generatedNodes.contains(temp)) {
+                        generatedNodes.add(temp);
+                    } else {
+                        for(Node node : generatedNodes) {
+                            if(node.fScore > temp.fScore) {
+                                generatedNodes.add(temp);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             if(curr.location.x <= EAST_LIMIT) {
                 nextPoint = new Point(curr.location.x + 1, curr.location.y);
@@ -76,8 +96,18 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.gScore < 0))
-                    tempNodes.add(temp);
+                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
+                    if (!generatedNodes.contains(temp)) {
+                        generatedNodes.add(temp);
+                    } else {
+                        for(Node node : generatedNodes) {
+                            if(node.fScore > temp.fScore) {
+                                generatedNodes.add(temp);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             if(curr.location.x >= WEST_LIMIT) {
                 nextPoint = new Point(curr.location.x - 1, curr.location.y);
@@ -88,34 +118,19 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.gScore < 0))
-                    tempNodes.add(temp);
-            }
-
-            for(Node temp : tempNodes) {
-                boolean flagAdd = true;
-                if(!searchedNodes.isEmpty() && !generatedNodes.isEmpty()) {
-                    for (Node sNode : searchedNodes) {
-                        if (temp.location.equals(sNode.location) && temp.fScore > sNode.fScore) {
-                            flagAdd = false;
-                            break;
-                        }
-                    }
-                    if (flagAdd) {
-                        for (Node gNode : generatedNodes) {
-                            if (temp.location.equals(gNode.location) && temp.fScore > gNode.fScore) {
-                                flagAdd = false;
+                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
+                    if (!generatedNodes.contains(temp)) {
+                        generatedNodes.add(temp);
+                    } else {
+                        for(Node node : generatedNodes) {
+                            if(node.fScore > temp.fScore) {
+                                generatedNodes.add(temp);
                                 break;
                             }
                         }
                     }
                 }
-
-                if(flagAdd)
-                    generatedNodes.add(temp);
             }
-
-            searchedNodes.add(curr);
         }
 
         ArrayList<Node> solution = new ArrayList<>();
@@ -142,12 +157,21 @@ public class aStarSearch {
     }
 
     private double costFunction(Point point1, Point point2) {
-        double dist = calculateDistance(point1, point2);
+        double dist = 0;
+        if(point1.x == point2.x) {
+            dist += LONGITUDE;
+        }
+        else {
+            dist += LATITUDE;
+        }
+        //dist += 1;
+        dist += elevationArray[point1.x][point1.y] - elevationArray[point2.x][point2.y];
 
         double TerrainMod1 = getTerrainModifier(point1);
         double TerrainMod2 = getTerrainModifier(point2);
 
-        return  TerrainMod1 * (dist / 2) + TerrainMod2 * (dist / 2);
+        return (dist / 2) / TerrainMod1 +  (dist / 2) / TerrainMod2;
+        //return (1 / 2) / TerrainMod1 +  (1 / 2) / TerrainMod2;
     }
 
     private double heuristicFunction(Point point1, Point point2) {
@@ -155,10 +179,9 @@ public class aStarSearch {
 
         double bestTerrainMod = 0;
         for (Terrain terrain : terrains)
-            if (bestTerrainMod < terrain.modifier)
-                bestTerrainMod = terrain.modifier;
+            bestTerrainMod = Math.max(bestTerrainMod, terrain.modifier);
 
-        return dist * bestTerrainMod;
+        return dist / bestTerrainMod;
     }
 
     private Node getNewNode(Node curr, Point nextPoint) {
@@ -176,6 +199,6 @@ public class aStarSearch {
             if(Arrays.equals(terr.color, valuesRGB))
                 return terr.modifier;
 
-        return -1;
+        return 0.001;
     }
 }

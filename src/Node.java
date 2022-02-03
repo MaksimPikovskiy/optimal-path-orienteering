@@ -22,6 +22,15 @@ public class Node implements Comparable<Node> {
         else return 0;
     }
 
+    public boolean equals(Object that) {
+        if(this == that) return true;
+        if(that == null) return false;
+        if (this.getClass() != that.getClass()) return false;
+
+        Node thatNode = (Node) that;
+        return this.location.equals(thatNode.location);
+    }
+
     public String toString() {
         return "Node at (" + location.getX() + ", " + location.getY() + ") with fScore = " + fScore;
     }
