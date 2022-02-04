@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class Node implements Comparable<Node> {
 
@@ -19,7 +20,12 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node that) {
         if(this.fScore < that.fScore) return -1;
         else if(this.fScore > that.fScore) return 1;
-        else return 0;
+        else {
+            int diffX = this.location.x - that.location.x;
+            int diffY = this.location.y - that.location.y;
+            if (diffX == 0) return diffY;
+            else return diffX;
+        }
     }
 
     public boolean equals(Object that) {
@@ -36,7 +42,10 @@ public class Node implements Comparable<Node> {
     }
 
     public String toString() {
-        return "Node at (" + location.getX() + ", " + location.getY() + ") with fScore = " + fScore;
+        return "Node at (" + location.getX() + ", " + location.getY() + ") " +
+                "with fScore = " + (new DecimalFormat("0.00")).format(fScore) + ", " +
+                "gScore = " + (new DecimalFormat("0.00")).format(gScore) + ", " +
+                "hScore = " + (new DecimalFormat("0.00")).format(hScore);
     }
 
 

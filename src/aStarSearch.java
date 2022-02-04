@@ -36,6 +36,7 @@ public class aStarSearch {
     public ArrayList<Node> findPath() {
         PriorityQueue<Node> generatedNodes = new PriorityQueue<>();
         Set<Node> searchedNodes = new HashSet<>();
+        Set<Node> inQ = new HashSet<>();
 
         Node start = new Node(startPoint, 0, heuristicFunction(startPoint, goalPoint), null);
         generatedNodes.add(start);
@@ -46,16 +47,16 @@ public class aStarSearch {
         StdDraw.clear();
 
         StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.filledCircle(reverseNumber(startPoint.getX(), 0, 400),
+        StdDraw.filledCircle(startPoint.getX(),
                 reverseNumber(startPoint.getY(), 0, 500), 1);
-        StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.filledCircle(reverseNumber(goalPoint.getX(), 0, 400),
+        StdDraw.filledCircle(goalPoint.getX(),
                 reverseNumber(goalPoint.getY(), 0, 500), 1);
 
         Point nextPoint;
         Node goal = null;
         while(!generatedNodes.isEmpty()) {
             Node curr = generatedNodes.remove();
+            inQ.remove(curr);
             if(searchedNodes.contains(curr)) {
                 continue;
             }
@@ -63,7 +64,7 @@ public class aStarSearch {
 
             StdDraw.setPenRadius(0.0);
             StdDraw.setPenColor(StdDraw.RED);
-            StdDraw.point(reverseNumber(curr.location.getX(), 0, 400),
+            StdDraw.point(curr.location.getX(),
                     reverseNumber(curr.location.getY(), 0, 500));
 
             if(curr.location.y <= NORTH_LIMIT) {
@@ -75,20 +76,15 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
-                    if (!generatedNodes.contains(temp)) {
+                if(!searchedNodes.contains(temp)) {
+                    if (!inQ.contains(temp)) {
                         generatedNodes.add(temp);
-
-//                        StdDraw.setPenColor(StdDraw.BLUE);
-//                        StdDraw.point(temp.location.getX(), temp.location.getY());
+                        inQ.add(temp);
                     } else {
-                        for(Node node : generatedNodes) {
+                        for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
                                 generatedNodes.add(temp);
-
-//                                StdDraw.setPenColor(StdDraw.BLUE);
-//                                StdDraw.point(temp.location.getX(), temp.location.getY());
-
+                                inQ.add(temp);
                                 break;
                             }
                         }
@@ -104,20 +100,15 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
-                    if (!generatedNodes.contains(temp)) {
+                if(!searchedNodes.contains(temp)) {
+                    if (!inQ.contains(temp)) {
                         generatedNodes.add(temp);
-
-//                        StdDraw.setPenColor(StdDraw.BLUE);
-//                        StdDraw.point(temp.location.getX(), temp.location.getY());
+                        inQ.add(temp);
                     } else {
-                        for(Node node : generatedNodes) {
+                        for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
                                 generatedNodes.add(temp);
-
-//                                StdDraw.setPenColor(StdDraw.BLUE);
-//                                StdDraw.point(temp.location.getX(), temp.location.getY());
-
+                                inQ.add(temp);
                                 break;
                             }
                         }
@@ -133,20 +124,15 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
-                    if (!generatedNodes.contains(temp)) {
+                if(!searchedNodes.contains(temp)) {
+                    if (!inQ.contains(temp)) {
                         generatedNodes.add(temp);
-
-//                        StdDraw.setPenColor(StdDraw.BLUE);
-//                        StdDraw.point(temp.location.getX(), temp.location.getY());
+                        inQ.add(temp);
                     } else {
-                        for(Node node : generatedNodes) {
+                        for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
                                 generatedNodes.add(temp);
-
-//                                StdDraw.setPenColor(StdDraw.BLUE);
-//                                StdDraw.point(temp.location.getX(), temp.location.getY());
-
+                                inQ.add(temp);
                                 break;
                             }
                         }
@@ -162,20 +148,15 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!(temp.fScore < 0 && !searchedNodes.contains(temp))) {
-                    if (!generatedNodes.contains(temp)) {
+                if(!searchedNodes.contains(temp)) {
+                    if (!inQ.contains(temp)) {
                         generatedNodes.add(temp);
-
-//                        StdDraw.setPenColor(StdDraw.BLUE);
-//                        StdDraw.point(temp.location.getX(), temp.location.getY());
+                        inQ.add(temp);
                     } else {
-                        for(Node node : generatedNodes) {
+                        for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
                                 generatedNodes.add(temp);
-
-//                                StdDraw.setPenColor(StdDraw.BLUE);
-//                                StdDraw.point(temp.location.getX(), temp.location.getY());
-
+                                inQ.add(temp);
                                 break;
                             }
                         }
@@ -184,7 +165,6 @@ public class aStarSearch {
             }
 
             System.out.println(curr);
-
             StdDraw.show();
         }
 
@@ -224,11 +204,11 @@ public class aStarSearch {
     private double heuristicFunction(Point point1, Point point2) {
         double dist = calculateDistance(point1, point2);
 
-        double bestTerrainMod = 1;
+        double bestTerrainMod = 1; //change to zero after testing
 //        for (Terrain terrain : terrains)
 //            bestTerrainMod = Math.max(bestTerrainMod, terrain.modifier);
 
-        return dist / bestTerrainMod * 100; //increase differences between heuristics?
+        return dist / bestTerrainMod; //increase differences between heuristics?* 100
     }
 
     private Node getNewNode(Node curr, Point nextPoint) {
@@ -245,7 +225,8 @@ public class aStarSearch {
 //        for(Terrain terr : terrains)
 //            if(Arrays.equals(terr.color, valuesRGB))
 //                return terr.modifier;
-
+//
+//        return 0.0001;
         return 1;
     }
 }

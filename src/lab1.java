@@ -28,6 +28,9 @@ public class lab1 {
 
         List<Terrain> terrains = new ArrayList<>();
 
+//        terrains.add(new Terrain("Paths", new int[]{255, 255, 255}, 1));
+//        terrains.add(new Terrain("Mountains", new int[]{0, 0, 0}, 0.001));
+
         terrains.add(new Terrain("Open land", new int[]{248, 148, 18}, 1));
         terrains.add(new Terrain("Rough meadow", new int[]{255, 192, 0}, 0.45));
         terrains.add(new Terrain("Easy movement forest", new int[]{255, 255, 255}, 0.8));
@@ -37,7 +40,7 @@ public class lab1 {
         terrains.add(new Terrain("Lake/Swamp/Marsh", new int[]{0, 0, 255}, 0.001));
         terrains.add(new Terrain("Paved road", new int[]{71, 51, 3}, 1));
         terrains.add(new Terrain("Footpath", new int[]{0, 0, 0}, 0.9));
-        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, 0.001));
+        terrains.add(new Terrain("Out of bounds", new int[]{205, 0, 101}, 0.00001));
 
 
         if(args.length != 4) {
@@ -62,7 +65,7 @@ public class lab1 {
 
         assert allElevations != null;
         //String[] tempElevationArray = allElevations.substring(3, allElevations.length()).split("\\s+");
-        String[] tempElevationArray = allElevations.split("\\s+");
+        String[] tempElevationArray = allElevations.strip().split("\\s+");
 
         for(int i = 0; i < tempElevationArray.length; i++) {
             if(tempElevationArray[i].length() > 0) {
@@ -112,6 +115,7 @@ public class lab1 {
         for(Node node: solutionPath) {
             terrainMap.setRGB(node.location.x, node.location.y, new Color(255, 0, 0, 255).getRGB());
         }
+        terrainMap.setRGB(0, 0, new Color(0, 0, 0, 255).getRGB());
 
         File totalDistanceFile = new File(outputPath + "totalDistance.txt");
         File terrainWithPathFile = new File(args[3]);
