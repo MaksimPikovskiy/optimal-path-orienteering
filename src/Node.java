@@ -31,6 +31,10 @@ public class Node implements Comparable<Node> {
         return this.location.equals(thatNode.location);
     }
 
+    public int hashCode() {
+        return location.x + location.y * 2;
+    }
+
     public String toString() {
         return "Node at (" + location.getX() + ", " + location.getY() + ") with fScore = " + fScore;
     }
