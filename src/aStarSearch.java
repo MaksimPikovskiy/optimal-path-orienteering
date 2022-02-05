@@ -34,12 +34,12 @@ public class aStarSearch {
     }
 
     public ArrayList<Node> findPath() {
-        PriorityQueue<Node> generatedNodes = new PriorityQueue<>();
-        Set<Node> searchedNodes = new HashSet<>();
+        PriorityQueue<Node> toExplore = new PriorityQueue<>();
+        Set<Node> visited = new HashSet<>();
         Set<Node> inQ = new HashSet<>();
 
-        Node start = new Node(startPoint, 0, heuristicFunction(startPoint, goalPoint), null);
-        generatedNodes.add(start);
+        Node start = new Node(startPoint, 0, 0, null);
+        toExplore.add(start);
 
         StdDraw.setCanvasSize(400, 500);
         StdDraw.setXscale(0,400);
@@ -54,13 +54,13 @@ public class aStarSearch {
 
         Point nextPoint;
         Node goal = null;
-        while(!generatedNodes.isEmpty()) {
-            Node curr = generatedNodes.remove();
+        while(!toExplore.isEmpty()) {
+            Node curr = toExplore.remove();
             inQ.remove(curr);
-            if(searchedNodes.contains(curr)) {
+            if(visited.contains(curr)) {
                 continue;
             }
-            searchedNodes.add(curr);
+            visited.add(curr);
 
             StdDraw.setPenRadius(0.0);
             StdDraw.setPenColor(StdDraw.RED);
@@ -76,14 +76,14 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!searchedNodes.contains(temp)) {
+                if(!visited.contains(temp)) {
                     if (!inQ.contains(temp)) {
-                        generatedNodes.add(temp);
+                        toExplore.add(temp);
                         inQ.add(temp);
                     } else {
                         for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
-                                generatedNodes.add(temp);
+                                toExplore.add(temp);
                                 inQ.add(temp);
                                 break;
                             }
@@ -100,14 +100,14 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!searchedNodes.contains(temp)) {
+                if(!visited.contains(temp)) {
                     if (!inQ.contains(temp)) {
-                        generatedNodes.add(temp);
+                        toExplore.add(temp);
                         inQ.add(temp);
                     } else {
                         for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
-                                generatedNodes.add(temp);
+                                toExplore.add(temp);
                                 inQ.add(temp);
                                 break;
                             }
@@ -124,14 +124,14 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!searchedNodes.contains(temp)) {
+                if(!visited.contains(temp)) {
                     if (!inQ.contains(temp)) {
-                        generatedNodes.add(temp);
+                        toExplore.add(temp);
                         inQ.add(temp);
                     } else {
                         for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
-                                generatedNodes.add(temp);
+                                toExplore.add(temp);
                                 inQ.add(temp);
                                 break;
                             }
@@ -148,14 +148,14 @@ public class aStarSearch {
                     break;
                 }
 
-                if(!searchedNodes.contains(temp)) {
+                if(!visited.contains(temp)) {
                     if (!inQ.contains(temp)) {
-                        generatedNodes.add(temp);
+                        toExplore.add(temp);
                         inQ.add(temp);
                     } else {
                         for(Node node : inQ) {
                             if(node.fScore > temp.fScore) {
-                                generatedNodes.add(temp);
+                                toExplore.add(temp);
                                 inQ.add(temp);
                                 break;
                             }
@@ -209,6 +209,7 @@ public class aStarSearch {
 //            bestTerrainMod = Math.max(bestTerrainMod, terrain.modifier);
 
         return dist / bestTerrainMod; //increase differences between heuristics?* 100
+        //return 1;
     }
 
     private Node getNewNode(Node curr, Point nextPoint) {
