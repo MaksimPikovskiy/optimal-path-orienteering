@@ -60,7 +60,6 @@ public class aStarSearch {
             if(visited.contains(curr)) {
                 continue;
             }
-            visited.add(curr);
 
             StdDraw.setPenRadius(0.0);
             StdDraw.setPenColor(StdDraw.RED);
@@ -163,6 +162,8 @@ public class aStarSearch {
                     }
                 }
             }
+
+            visited.add(curr);
 
             System.out.println(curr);
             StdDraw.show();
