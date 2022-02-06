@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  *
  * After {@linkplain aStarSearch} has finished finding paths between all provided points,
  * This class prints the total distance of the path (and writes it into output folder in
- * the directory, and draws a path on the provided terrain map and saves it as separate
+ * the directory), and draws a path on the provided terrain map and saves it as separate
  * image (specified as last argument).
  *
  * It also calculates the time taken to find the path(s)
