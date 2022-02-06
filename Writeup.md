@@ -33,16 +33,33 @@ the process until it encounters the goal point and returns the optimal path it f
 **Actions**:
 * Move to the neighboring location of the explored location (4 directions: North, South, East, West).
 
+## **Glossary**
+| Term | Definition |
+|------|------------|
+| fScore | the total estimated cost to <br> get to goal point |
+| gScore | the total cost of the current <br> path |
+| hScore | the cost of the path from <br> selected point to goal point |
+
+
 ## **lab1 Class** <a name="lab1-class"></a>
-`lab1` Class is the core of this program. By providing it required arguments (see "Run The Program" Section), 
-`lab1` initiates the terrains with their respective names, colors, and modifiers and checks for valid number 
-of arguments. After that, it reads from the provided terrain image (for `aStarSearch` to check for colors),
-converts the elevations file into 2D array, reads from the provided path file and calls on `aStarSearch` 
-to find a path from one point to another. After `aStarSearch` has finished finding paths between all provided 
-points, `lab1` calculates and prints the total distance of the path (furthermore, it writes the total distance
-into a `totalDistance.txt` in `output` folder in the directory), and draws a path on the provided terrain map 
-and saving it as separate image with the path specified as last argument (still saves it in `output` folder).
-Lastly, it calculates the total amount of time it has taken to calculate the optimal paths between the provided
+`lab1` Class is the core of this program. It requires four arguments, which are terrain image, elevation file, 
+path file, and output image file path.
+
+Firstly, `lab1` initiates the terrains with their respective names, colors, and modifiers and checks for valid number 
+of arguments. It stops the execution of the program if incorrect number of arguments is received.
+
+After getting the four required arguments, it does the following:
+1. It reads from the provided terrain image (for `aStarSearch` to check for colors),
+2. Converts the elevations file into 2D array, 
+3. Reads from the provided path file, 
+4. Calls on `aStarSearch` to find a path from one point to another.
+
+After `aStarSearch` has finished finding paths between all provided points, `lab1` does the following:
+1. `lab1` calculates and prints the total distance of the path and writes the total distance into a 
+2. `totalDistance.txt` in `output` folder in the directory, 
+3. Draws a path on the provided terrain map, saving it as separate image with the path specified as last argument 
+(still saves it in `output` folder),
+4. Calculates the total amount of time it has taken to calculate the optimal paths between the provided
 points.
 
 ## **aStarSearch Class** <a name="astarsearch-class"></a>
@@ -156,7 +173,9 @@ To run the "normal" testcase with brown path selected, this is the command:
 One of the current bugs occurs when all terrain modifiers are the same (for example, all of them are 1). It seems 
 that the fScores become very similar the longer the `aStarSearch` algorithm runs and as such, it has to search
 many more nodes. This bug occurs when the starting point and goal point are on diagonal of each other. To temporarily
-fix this issue, it is possible to multiply the heuristic cost by 1.5 in `heuristicFunction()`.
+fix this issue, it is possible to multiply the heuristic cost by 1.5 in `heuristicFunction()`. Multiplying the 
+heuristic cost by 1.5 makes the A* search algorithm more greedy, and as such, allows it to efficiently select the 
+path (it might or might not be the optimal path).
 
 By reading up on A* search algorithm, I can point the issue to the same paths with the same length. As such,
 there are many tiebreakers and A* search has to search all paths, making it more inefficient. This issue is described

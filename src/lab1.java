@@ -79,6 +79,7 @@ public class lab1 {
         if(args.length != 4) {
             System.err.println("Error: Incorrect number of arguments");
             usage();
+            System.exit(0);
         }
 
         // Checks all required files if they exist and retrieves them.
