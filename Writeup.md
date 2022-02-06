@@ -1,6 +1,7 @@
 # **Summer Orienteering**
 ### *Maksim Pikovskiy*
 #### *CSCI-331: Introduction to Artificial Intelligence*
+#### *2/6/2022*
 
 ### **Table of Contents**
 * [lab1 Class](#lab1-class)
@@ -49,17 +50,17 @@ Firstly, `lab1` initiates the terrains with their respective names, colors, and 
 of arguments. It stops the execution of the program if incorrect number of arguments is received.
 
 After getting the four required arguments, it does the following:
-1. It reads from the provided terrain image (for `aStarSearch` to check for colors),
+1. Reads from the provided terrain image (for `aStarSearch` to check for colors),
 2. Converts the elevations file into 2D array, 
 3. Reads from the provided path file, 
 4. Calls on `aStarSearch` to find a path from one point to another.
 
 After `aStarSearch` has finished finding paths between all provided points, `lab1` does the following:
-1. `lab1` calculates and prints the total distance of the path and writes the total distance into a 
-2. `totalDistance.txt` in `output` folder in the directory, 
+1. Calculates and prints the total distance of the path,
+2. Writes the total distance into a `totalDistance.txt` in `output` folder in the directory,
 3. Draws a path on the provided terrain map, saving it as separate image with the path specified as last argument 
 (still saves it in `output` folder),
-4. Calculates the total amount of time it has taken to calculate the optimal paths between the provided
+4. Calculates and prints the total amount of time it has taken to calculate the optimal paths between the provided
 points.
 
 ## **aStarSearch Class** <a name="astarsearch-class"></a>
@@ -191,3 +192,9 @@ With this bug, the "elevation" testcase is unfortunately unsolvable in a short a
 take a lot of time to solve it by exploring every single `Node`. If heuristic cost is multiplied by 1.5, the algorithm 
 will directly path towards the goal, ignoring the terrain differences (e.g. Mountains with black color). Unfortunately, 
 I have yet to solve this issue.
+
+### **Output**
+`output` directory contains all the outputs that were processed after running this program. Each directory in `output`
+corresponds to the testcases in `testcases` directory.
+
+`totalDistance.txt` is the only one that gets overwritten when a new search is run.
